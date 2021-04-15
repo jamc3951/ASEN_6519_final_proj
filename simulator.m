@@ -25,14 +25,29 @@ enemy = [5,2];
 
 %Option 2: Recompute MC's in discrete time
 figure()
-[current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,500,inf);
+[current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,500,500,inf);
 hold on;
 grid on;
 plot(1:length(oa),oa);
 plot(1:length(pf_oa),pf_oa);
-
+legend('Original','New');
 xlabel('k');
 ylabel('GOA');
+title('GOA value comparison');
+
+N_s = 500;
+C_s = [1,20,100,500];
+figure()
+hold on;
+grid on;
+[current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
+for i = 1:length(C_s)
+    plot(1:length(oa),abs(pf_oa(:,i) - oa));
+end
+legend('Cs = 1','Cs = 20','Cs = 100','Cs = 500');
+xlabel('k');
+ylabel('GOA Error');
+title('Original vs. new error with C_s varying');
 
 %Option 3: Shorter horizon MC sims
 % figure()
