@@ -25,31 +25,33 @@ enemy = [5,2];
 
 %Option 2: Recompute MC's in discrete time
 figure()
-subplot(2,1,1)
-tic
-[agent2,enemy2,caught,pz, goa_inf] = goa_online(workspace1,start,goal,enemy,0.4,1000,inf);
-plotWorkspace(start, goal, 'Full Horizon MCSims',agent2,enemy2,goa_inf)
-toc
+[current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,500,inf);
+hold on;
+grid on;
+plot(1:length(oa),oa);
+plot(1:length(pf_oa),pf_oa);
 
+xlabel('k');
+ylabel('GOA');
 
 %Option 3: Shorter horizon MC sims
-figure()
-subplot(2,1,1)
-tic
-[agent3,enemy3,caught,pz, goa_k] = goa_online(workspace1,start,goal,enemy,0.4,1000,20);
-plotWorkspace(start, goal, 'Short Horizon MCSims',agent3,enemy3,goa_k)
-toc
-
-% Baseline 
-%%%%%%%%%%%
-error = 0.4;
-
-
-% Get Sims
- traj = runArbMCSims(workspace1,1000,error,inf);
+% figure()
+% subplot(2,1,1)
+% tic
+% [agent3,enemy3,caught,pz, goa_k] = goa_online(workspace1,start,goal,enemy,0.4,1000,20);
+% plotWorkspace(start, goal, 'Short Horizon MCSims',agent3,enemy3,goa_k)
+% toc
 % 
-% % Compute GOA's
- [goal_confidence,z,z_ll,p_z] = general_oa_v2(traj(:,3), [-0.5,0.5,1], 2);
+% % Baseline 
+% %%%%%%%%%%%
+% error = 0.4;
+% 
+% 
+% % Get Sims
+%  traj = runArbMCSims(workspace1,1000,error,inf);
+% % 
+% % % Compute GOA's
+%  [goal_confidence,z,z_ll,p_z] = general_oa_v2(traj(:,3), [-0.5,0.5,1], 2);
 % disp(['Baseline Confidence of reaching goal: ', string(goal_confidence)]);
 % 
 % % Composite

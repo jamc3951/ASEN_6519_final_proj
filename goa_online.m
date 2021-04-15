@@ -10,6 +10,7 @@ d_0 = distance(start,goal);
 while norm(current(end,:) - goal) > step/2
     %Run MC sims
     traj = runMCSims(workspace,current(end,:),goal,adversary(end,:),num_samples,error,horizon);
+    
     %Rank 2D
     [outcomes,bins,xBins] = composite_ordering(traj,d_0);
     
