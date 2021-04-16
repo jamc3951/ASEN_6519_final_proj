@@ -16,9 +16,9 @@ workspace1(:,:,3) = O3;
 workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
 
-start = [15,0];
-goal = [10,10];
-enemy = [5,2];
+start = [normrnd(15,2,1), normrnd(0,2,1)];
+goal = [normrnd(10,2,1), normrnd(10,2,1)];
+enemy = [normrnd(5,2,1), normrnd(2,2,1)];
 
 %Run Bug algorithms and plot
 %Every time agent moves, the enemy moves towards agent
@@ -36,18 +36,18 @@ ylabel('GOA');
 title('GOA value comparison');
 
 N_s = 500;
-C_s = [1,20,100,500];
+C_s = [5,20,100,500];
 figure()
 hold on;
 grid on;
 [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
 for i = 1:length(C_s)
-    plot(1:length(oa),abs(pf_oa(:,i) - oa));
+    plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
 end
-legend('Cs = 1','Cs = 20','Cs = 100','Cs = 500');
+legend('Cs = 5','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
 ylabel('GOA Error');
-title('Original vs. new error with C_s varying');
+title('Original vs. New Error');
 
 %Option 3: Shorter horizon MC sims
 % figure()

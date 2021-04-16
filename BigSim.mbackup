@@ -1,0 +1,8 @@
+for i=1:100
+    start = [normrnd(15,2,1), normrnd(0,2,1)];
+    goal = [normrnd(10,2,1), normrnd(10,2,1)];
+    enemy = [normrnd(5,2,1), normrnd(2,2,1)];
+    [current, adversary, outcome] = bug1(workspace,start,goal,enemy,error,k);
+    simcurr(:,i)=current;
+    
+end
