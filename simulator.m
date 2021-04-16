@@ -36,7 +36,11 @@ ylabel('GOA');
 title('GOA value comparison');
 
 N_s = 500;
+<<<<<<< HEAD
 C_s = [5,20,100,500];
+=======
+C_s = [5,30,100,500];
+>>>>>>> 54d442ea52c28f9b12d2f475df22dee2371f4ce4
 figure()
 hold on;
 grid on;
@@ -44,7 +48,11 @@ grid on;
 for i = 1:length(C_s)
     plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
 end
+<<<<<<< HEAD
 legend('Cs = 5','Cs = 20','Cs = 100','Cs = 500');
+=======
+legend('Cs = 5','Cs = 30','Cs = 100','Cs = 500');
+>>>>>>> 54d442ea52c28f9b12d2f475df22dee2371f4ce4
 xlabel('k');
 ylabel('GOA Error');
 title('Original vs. New Error');
