@@ -36,7 +36,7 @@ ylabel('GOA');
 title('GOA value comparison');
 
 N_s = 500;
-C_s = [1,20,100,500];
+C_s = [5,30,100,500];
 figure()
 hold on;
 grid on;
@@ -44,7 +44,7 @@ grid on;
 for i = 1:length(C_s)
     plot(1:length(oa),abs(pf_oa(:,i) - oa));
 end
-legend('Cs = 1','Cs = 20','Cs = 100','Cs = 500');
+legend('Cs = 5','Cs = 30','Cs = 100','Cs = 500');
 xlabel('k');
 ylabel('GOA Error');
 title('Original vs. new error with C_s varying');
