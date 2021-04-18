@@ -36,26 +36,29 @@ ylabel('GOA');
 title('GOA value comparison');
 
 N_s = 500;
-<<<<<<< HEAD
+
 C_s = [5,20,100,500];
-=======
-C_s = [5,30,100,500];
->>>>>>> 54d442ea52c28f9b12d2f475df22dee2371f4ce4
+pferror=zeros(50,4);
+counts=zeros(50,1);
 figure()
 hold on;
 grid on;
-[current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
-for i = 1:length(C_s)
-    plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
+for k=1:50
+    [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
+    for i=1:length(C_s)
+        pferror(1:length(oa),i)=pferror(1:length(oa),i)+abs(pf_oa(:,i) - oa);
+    end
+    counts(1:length(oa))=counts(1:length(oa))+1;
+    % for i = 1:length(C_s)
+    %     plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
+    % end
 end
-<<<<<<< HEAD
+
+plot(pferror./counts)
 legend('Cs = 5','Cs = 20','Cs = 100','Cs = 500');
-=======
-legend('Cs = 5','Cs = 30','Cs = 100','Cs = 500');
->>>>>>> 54d442ea52c28f9b12d2f475df22dee2371f4ce4
 xlabel('k');
-ylabel('GOA Error');
-title('Original vs. New Error');
+ylabel('Mean GOA Error');
+title('Mean Original vs. New Error');
 
 %Option 3: Shorter horizon MC sims
 % figure()
@@ -64,38 +67,38 @@ title('Original vs. New Error');
 % [agent3,enemy3,caught,pz, goa_k] = goa_online(workspace1,start,goal,enemy,0.4,1000,20);
 % plotWorkspace(start, goal, 'Short Horizon MCSims',agent3,enemy3,goa_k)
 % toc
-% 
-% % Baseline 
+%
+% % Baseline
 % %%%%%%%%%%%
 % error = 0.4;
-% 
-% 
+%
+%
 % % Get Sims
 %  traj = runArbMCSims(workspace1,1000,error,inf);
-% % 
+% %
 % % % Compute GOA's
 %  [goal_confidence,z,z_ll,p_z] = general_oa_v2(traj(:,3), [-0.5,0.5,1], 2);
 % disp(['Baseline Confidence of reaching goal: ', string(goal_confidence)]);
-% 
+%
 % % Composite
 % d_0 = distance(start,goal);
 % [outcomes,bins,xBin] = composite_ordering(traj,10.66);
 % [composite_confidence,~,pz] = goa_v3(outcomes,4,bins,xBin,4);
 % disp(['Baseline Comp. Confidence of reaching goal: ', string(composite_confidence)]);
-% 
+%
 % % labels = {-1: "Very Bad", -0.5: "Bad", -0.1: "Fair", 0.1: "Good", 0.5: "Very good"}
-% 
-% 
+%
+%
 % % Compare to Online Assessment
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 % % Composite Label -- change to goal confidence due to arb. d0
 % labels = [-1,-0.5,-0.1,0.1,0.5];
 % lower = labels((labels < composite_confidence));
 % upper = labels((labels > composite_confidence));
-% base_label = [lower(1)] ; 
+% base_label = [lower(1)] ;
 
-% Accuracy 
+% Accuracy
 %[p] = benchmark_online(base_label,[500,250,100,50,20,10,1],0.4,workspace1,20);
 %benchmark_online_error(workspace1);
 
