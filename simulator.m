@@ -37,25 +37,31 @@ title('GOA value comparison');
 
 N_s = 500;
 
-C_s = [5,20,100,500];
+C_s = [8,20,100,500];
 pferror=zeros(50,4);
 counts=zeros(50,1);
-figure()
-hold on;
-grid on;
-for k=1:50
+mssd=zeros(50,4);
+prev_error=pferror;
+
+for k=1:10
     [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
-    for i=1:length(C_s)
-        pferror(1:length(oa),i)=pferror(1:length(oa),i)+abs(pf_oa(:,i) - oa);
-    end
+
+    pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
     counts(1:length(oa))=counts(1:length(oa))+1;
+    if k>1
+    mssd(1:length(oa),:)=mssd(1:length(oa),:)+(pferror(1:length(oa),:)-prev_error(1:length(oa),:)).^2;
+    end
+    prev_error(1:length(oa),:)=abs(pf_oa(:,:) - oa);
     % for i = 1:length(C_s)
     %     plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
     % end
 end
-
+figure()
+hold on;
+grid on;
 plot(pferror./counts)
-legend('Cs = 5','Cs = 20','Cs = 100','Cs = 500');
+% plot(mssd./(2*(counts-1)),'--')
+legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
 ylabel('Mean GOA Error');
 title('Mean Original vs. New Error');
