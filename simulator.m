@@ -38,12 +38,12 @@ title('GOA value comparison');
 N_s = 500;
 
 C_s = [8,20,100,500];
-pferror=zeros(50,4);
-counts=zeros(50,1);
-mssd=zeros(50,4);
+pferror=zeros(60,4);
+counts=zeros(60,1);
+mssd=zeros(60,4);
 prev_error=pferror;
 
-for k=1:10
+for k=1:100
     [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
 
     pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
