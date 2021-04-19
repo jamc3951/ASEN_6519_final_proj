@@ -12,18 +12,19 @@ for j = 1:C_s
     outcomes(j) = o;
     current_kp(j,:) = c(2,:);
     adversary_kp(j,:) = a(2,:);
+    char_weights(j)=mvnpdf([current_kp(j,:),adversary_kp(j,:)],ykp(:)',10*eye(4));
     
     
     if outcomes(j) == 1
-        outcomes_kp(2) = outcomes_kp(2) + mvnpdf([current_kp(j,:),adversary_kp(j,:)],ykp(:)',10*eye(4));
+        outcomes_kp(2) = outcomes_kp(2) + char_weights(j);
     else
-        outcomes_kp(1) = outcomes_kp(1) + mvnpdf([current_kp(j,:),adversary_kp(j,:)],ykp(:)',10*eye(4));
+        outcomes_kp(1) = outcomes_kp(1) + char_weights(j);
     end
     
 end
 
 for i = 1:(N_s-C_s)
-    c = randsample(C_s,1,true); %Could sample by weights somehow
+    c = pick_char(char_weights); %Could sample by weights somehow thats what this new thing does
     current_c = mvnrnd(current_kp(c,:),5*eye(2));
     adversary_c = mvnrnd(adversary_kp(c,:),5*eye(2));
 %     Sh(i)=0;
