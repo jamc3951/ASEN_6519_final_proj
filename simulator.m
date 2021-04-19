@@ -41,7 +41,7 @@ C_s = [8,20,100,500];
 pferror=zeros(60,4);
 counts=zeros(60,1);
 mssd=zeros(60,4);
-Nsim=40;
+Nsim=50;
 prev_error=pferror;
 f = waitbar(0,'Running Simulations');
 for k=1:Nsim
@@ -50,7 +50,7 @@ for k=1:Nsim
     pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
     counts(1:length(oa))=counts(1:length(oa))+1;
     if k>1
-    mssd(1:length(oa),:)=mssd(1:length(oa),:)+(pferror(1:length(oa),:)-prev_error(1:length(oa),:)).^2;
+    mssd(1:length(oa),:)=mssd(1:length(oa),:)+(pferror(1:length(oa),:)-prev_error(1:length(oa),:)).^2/2;
     end
     prev_error(1:length(oa),:)=abs(pf_oa(:,:) - oa);
     % for i = 1:length(C_s)
