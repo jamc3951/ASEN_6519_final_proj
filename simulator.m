@@ -16,9 +16,9 @@ workspace1(:,:,3) = O3;
 workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
 
-start = [normrnd(15,2,1), normrnd(0,2,1)];
-goal = [normrnd(10,2,1), normrnd(10,2,1)];
-enemy = [normrnd(5,2,1), normrnd(2,2,1)];
+start = [normrnd(15,.5,1), normrnd(0,.5,1)];
+goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
+enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
 
 %Run Bug algorithms and plot
 %Every time agent moves, the enemy moves towards agent
@@ -41,7 +41,7 @@ C_s = [8,20,100,500];
 pferror=zeros(60,4);
 counts=zeros(60,1);
 mssd=zeros(60,4);
-Nsim=50;
+Nsim=20;
 prev_error=pferror;
 f = waitbar(0,'Running Simulations');
 for k=1:Nsim
@@ -58,10 +58,11 @@ for k=1:Nsim
     % end
     waitbar(k/Nsim,f)
 end
+close(f)
 figure()
 hold on;
 grid on;
-plot(pferror(1:23,:)./counts(1:23))
+plot(pferror(1:30,:)./counts(1:30))
 % plot(mssd./(2*(counts-1)),'--')
 legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
