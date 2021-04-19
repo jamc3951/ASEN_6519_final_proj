@@ -41,7 +41,7 @@ C_s = [8,20,100,500];
 pferror=zeros(60,4);
 counts=zeros(60,1);
 mssd=zeros(60,4);
-Nsim=20;
+Nsim=30;
 prev_error=pferror;
 f = waitbar(0,'Running Simulations');
 for k=1:Nsim
@@ -62,7 +62,7 @@ close(f)
 figure()
 hold on;
 grid on;
-plot(pferror(1:30,:)./counts(1:30))
+plot(pferror(:,:)./counts(:))
 % plot(mssd./(2*(counts-1)),'--')
 legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
