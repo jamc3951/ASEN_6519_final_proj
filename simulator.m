@@ -42,8 +42,8 @@ pferror=zeros(60,4);
 counts=zeros(60,1);
 mssd=zeros(60,4);
 prev_error=pferror;
-
-for k=1:100
+f = waitbar(0,'Running Simulations');
+for k=1:500
     [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
 
     pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
@@ -55,11 +55,12 @@ for k=1:100
     % for i = 1:length(C_s)
     %     plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
     % end
+    waitbar(k/500,f)
 end
 figure()
 hold on;
 grid on;
-plot(pferror./counts)
+plot(pferror(1:23,:)./counts(1:23))
 % plot(mssd./(2*(counts-1)),'--')
 legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
