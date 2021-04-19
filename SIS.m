@@ -22,6 +22,7 @@ for j = 1:C_s
     end
     
 end
+char_weights=char_weights./sum(char_weights);
 
 for i = 1:(N_s-C_s)
     c = pick_char(char_weights); %Could sample by weights somehow thats what this new thing does
