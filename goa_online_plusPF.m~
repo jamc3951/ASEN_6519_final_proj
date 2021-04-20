@@ -1,4 +1,4 @@
-function [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace,start,goal,enemy,error,num_samples,C_s,horizon)
+function [current, adversary, caught, pzs, oa, pf_oa, BS, RS] = goa_online_plusPF(workspace,start,goal,enemy,error,num_samples,C_s,horizon)
 N_s = num_samples;
 current = [start];
 adversary = [enemy];
@@ -9,7 +9,8 @@ step = 0.5;
 caught = [];
 d_0 = distance(start,goal);
 wk = zeros(1,N_s);
-
+b = [];
+regret = [];
 
 while norm(current(end,:) - goal) > step/2
     %Run MC sims
@@ -30,6 +31,28 @@ while norm(current(end,:) - goal) > step/2
         temp_oa = [temp_oa goal_confidence];
     end
     pf_oa = [pf_oa; temp_oa];
+    
+    %Get a temporal BS for each step
+
+      forecast_prob(w) = p_z(w,z_star);
+      result =  runMCSims(workspace,agent2(w,:),goal,enemy2(w,:),1,error,inf);
+      actual_run(w) = result(3);
+    end
+    b = (forecast_prob - actual_run).^2;
+    for z = 1:length(actual_run)
+        if actual_run(z) == 1
+            regret(z) = ((1-goa_inf(z))/2)^2;
+        else
+            regret(z) = ((1 + goa_inf(z))/2)^2;
+        end
+    end
+    bt(i) = mean(b);
+    regrett(i) = mean(regret);
+    end
+    BS(j) = sum(bt)/N;
+    R(j) = sum(regrett)/N;
+    
+    
     
     if collide == 1
         caught = [caught; 1];
