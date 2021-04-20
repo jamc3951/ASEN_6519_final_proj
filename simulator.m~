@@ -42,71 +42,45 @@ all_vars = zeros(Nsim,4);
 pferror=zeros(60,4);
 counts=zeros(60,1);
 mssd=zeros(60,4);
-Nsim=10;
 
+prev_error=pferror;
 %f = waitbar(0,'Running Simulations');
 for k=1:Nsim
     [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
-    all_vars(k,:) = [var((pf_oa(:,1) - oa)) var((pf_oa(:,2) - oa)) var((pf_oa(:,3) - oa)) var((pf_oa(:,4) - oa))];
+    all_vars(k,:) = [var(abs(pf_oa(:,1) - oa)) var(abs(pf_oa(:,2) - oa)) var(abs(pf_oa(:,3) - oa)) var(abs(pf_oa(:,4) - oa))];
     pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
     counts(1:length(oa))=counts(1:length(oa))+1;
+    if k>1
+        mssd(1:length(oa),:)=mssd(1:length(oa),:)+(pferror(1:length(oa),:)-prev_error(1:length(oa),:)).^2/2;
+    end
+    prev_error(1:length(oa),:)=abs(pf_oa(:,:) - oa);
     % for i = 1:length(C_s)
     %     plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
     % end
     %waitbar(k/Nsim,f)
 end
-
+<<<<<<< HEAD
 temp_cutoff = max(find(counts == Nsim));
-vars_cutoff = max(find(all_vars(:,1) >0));
+
 
 figure()
 hold on;
 grid on;
 plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
-
+%errorbar(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff),2*sqrt(all_vars(1:temp_cutoff,:)));
+=======
+close(f)
+figure()
+hold on;
+grid on;
+plot(pferror(1:30,:)./counts(1:30))
+>>>>>>> 362cc8490f91773581c0d12e3ced5ac59db45e93
 % plot(mssd./(2*(counts-1)),'--')
 legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
 ylabel('Mean GOA Error');
 title('Mean Original vs. New Error');
 
-
-figure();
-subplot(2,2,1)
-hold on;
-grid on;
-title(sprintf('Cs=%.0f',C_s(1)))
-plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff));
-plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,1)),'--r');
-plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,1)),'--r');
-legend('Error','2\sigma Bound')
-
-subplot(2,2,2)
-hold on;
-grid on;
-title(sprintf('Cs=%.0f',C_s(2)))
-plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff));
-plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,2)),'--r');
-plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,2)),'--r');
-legend('Error','2\sigma Bound')
-
-subplot(2,2,3)
-hold on;
-grid on;
-title(sprintf('Cs=%.0f',C_s(3)))
-plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff));
-plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,3)),'--r');
-plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,3)),'--r');
-legend('Error','2\sigma Bound')
-
-subplot(2,2,4)
-hold on;
-grid on;
-title(sprintf('Cs=%.0f',C_s(4)))
-plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff));
-plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,4)),'--r');
-plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,4)),'--r');
-legend('Error','2\sigma Bound')
 %Option 3: Shorter horizon MC sims
 % figure()
 % subplot(2,1,1)

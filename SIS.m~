@@ -33,14 +33,17 @@ for i = 1:(N_s-C_s)
     
     current_c = mvnrnd(current_kp(c,:),10*eye(2));
     adversary_c = mvnrnd(adversary_kp(c,:),10*eye(2));
-
- 
+%     Sh(i)=0;
+%     for j=1:size(current_kp,1)
+%         Sh(i)=Sh(i)+mvnpdf([current_c,adversary_c]',[current_kp(j,:),adversary_kp(j,:)]' ,10*eye(4))*outcomes_kp(j);
+%     end
+%  
     if outcomes(c) == 1 %Variance?
         outcomes_kp(2) = outcomes_kp(2) + mvnpdf([current_c,adversary_c],ykp(:)',abs([current_c,adversary_c]- ykp(:)').*eye(4) + eye(4)).*...
-            mvnpdf([current_c,adversary_c],[current_kp(c,:),adversary_kp(c,:)],(abs([current_kp(c,:),adversary_kp(c,:)]- ykp(:)')).*eye(4) + eye(4));
+            mvnpdf([current_c,adversary_c],[current_kp(c,:),adversary_kp(c,:)],inv(var(char_weights))*eye(4));
     else
         outcomes_kp(1) = outcomes_kp(1) +  mvnpdf([current_c,adversary_c],ykp(:)',abs([current_c,adversary_c]- ykp(:)').*eye(4) + eye(4)).*...
-            mvnpdf([current_c,adversary_c],[current_kp(c,:),adversary_kp(c,:)],(abs([current_kp(c,:),adversary_kp(c,:)]- ykp(:)')).*eye(4) + eye(4));
+            mvnpdf([current_c,adversary_c],[current_kp(c,:),adversary_kp(c,:)],inv(var(char_weights))*eye(4));
     end
 end
 t = sum(outcomes_kp);

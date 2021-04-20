@@ -37,3 +37,10 @@ end
 
 
 figure, histogram(simoutc)
+
+
+%     Sh(i)=0;
+%     for j=1:size(current_kp,1)
+%         Sh(i)=Sh(i)+mvnpdf([current_c,adversary_c]',[current_kp(j,:),adversary_kp(j,:)]' ,10*eye(4))*outcomes_kp(j);
+%     end
+% 
