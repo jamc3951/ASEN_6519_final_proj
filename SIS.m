@@ -45,11 +45,11 @@ for i = 1:(N_s-C_s)
 %  
     if outcomes(c) == 1 %Variance?
 
-        outcomes_kp(2) = outcomes_kp(2) + mvnpdf([current_c,adversary_c],ykp,abs([current_c,adversary_c]- ykp).*eye(4) + eye(4)).*...
-            mvnpdf([current_c,adversary_c],[current_kp(c,:),adversary_kp(c,:)],Ps*eye(4));
+        outcomes_kp(2) = outcomes_kp(2) + char_weights(c)*mvnpdf([current_c,adversary_c],ykp,abs([current_c,adversary_c]- ykp).*eye(4) + eye(4)).*...
+            mvnpdf([current_c,adversary_c],[current,adversary],Ps*eye(4));
     else
-        outcomes_kp(1) = outcomes_kp(1) +  mvnpdf([current_c,adversary_c],ykp,abs([current_c,adversary_c]- ykp).*eye(4) + eye(4)).*...
-            mvnpdf([current_c,adversary_c],[current_kp(c,:),adversary_kp(c,:)],Ps*eye(4));
+        outcomes_kp(1) = outcomes_kp(1) +  char_weights(c)*mvnpdf([current_c,adversary_c],ykp,abs([current_c,adversary_c]- ykp).*eye(4) + eye(4)).*...
+            mvnpdf([current_c,adversary_c],[current,adversary],Ps*eye(4));
 
     end
 end
