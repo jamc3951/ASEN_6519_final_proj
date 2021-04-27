@@ -1,6 +1,7 @@
 clear;close all;clc;
 
 %Define workspaces: obstacle code removed but simple c/p
+plotting=0;
 workspace1 = zeros(4,2,5);
 O1 = [1 1; 2 1; 2 5; 1 5];
 O2 = [3 4; 4 4; 4 12; 3 12];
@@ -14,7 +15,7 @@ workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
 
 
-for i=1:500
+for i=1:1e6
     start = [normrnd(15,1,1), normrnd(0,1,1)];
     goal = [normrnd(10,1,1), normrnd(10,1,1)];
     enemy = [normrnd(5,6,1), normrnd(2,6,1)];
@@ -22,6 +23,7 @@ for i=1:500
     simcurr{i}=current';
     simadv{i}=adversary';
     simoutc(i)=outcome';
+    if plotting
     if outcome==1
         color='g-';
     else 
@@ -33,6 +35,7 @@ for i=1:500
     xlabel('Current y Position')
     ylabel('Adversary y Position')
     title('Simulated Outcomes')
+    end
 end
 
 
