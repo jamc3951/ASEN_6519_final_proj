@@ -16,54 +16,49 @@ workspace1(:,:,3) = O3;
 workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
 
+%Produce one trajectory to validate confidence
+%------------------------------
 start = [normrnd(15,.5,1), normrnd(0,.5,1)];
 goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
 enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
 
-%Run Bug algorithms and plot
-%Every time agent moves, the enemy moves towards agent
-
-%Option 2: Recompute MC's in discrete time
 figure()
 [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,500,500,inf);
 subplot(2,1,1)
 hold on;
 grid on;
-
-plot(1:length(oa),oa);
-plot(1:length(pf_oa),pf_oa);
-legend('Original','New');
 xlabel('k');
 ylabel('GOA');
 title('GOA value comparison');
 
-N_s = 500;
-Nsim=50;
-C_s = [8,20,100,500];
-all_vars = zeros(Nsim,4);
-pferror=zeros(60,4);
-counts=zeros(60,1);
-mssd=zeros(60,4);
-Nsim=10;
 
-%f = waitbar(0,'Running Simulations');
-for k=1:Nsim
-    [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
-    all_vars(k,:) = [var((pf_oa(:,1) - oa)) var((pf_oa(:,2) - oa)) var((pf_oa(:,3) - oa)) var((pf_oa(:,4) - oa))];
-    pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
-    counts(1:length(oa))=counts(1:length(oa))+1;
-    %waitbar(k/Nsim,f)
-end
-
-temp_cutoff = max(find(counts == Nsim));
-vars_cutoff = max(find(all_vars(:,1) >0));
-
-figure()
-hold on;
-grid on;
-plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
-
-legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
+% N_s = 500;
+% Nsim=10;
+% C_s = [8,20,100,500];
+% all_vars = zeros(Nsim,4);
+% pferror=zeros(60,4);
+% counts=zeros(60,1);
+% mssd=zeros(60,4);
+% Nsim=10;
+% 
+% %f = waitbar(0,'Running Simulations');
+% for k=1:Nsim
+%     [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
+%     all_vars(k,:) = [var((pf_oa(:,1) - oa)) var((pf_oa(:,2) - oa)) var((pf_oa(:,3) - oa)) var((pf_oa(:,4) - oa))];
+%     pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
+%     counts(1:length(oa))=counts(1:length(oa))+1;
+%     %waitbar(k/Nsim,f)
+% end
+% 
+% temp_cutoff = max(find(counts == Nsim));
+% vars_cutoff = max(find(all_vars(:,1) >0));
+% 
+% figure()
+% hold on;
+% grid on;
+% plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
+% 
+% legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 
 axis equal;
 title('Bug Problem Playout');
@@ -92,13 +87,18 @@ xlabel('k');
 ylabel('GOA');
 
 title('GOA value comparison');
+
+
+%DO BS/RS----------------------------------------
 C_s = [1:50:500];
 Nl = C_s;
 %[BS,R,R_pf] = brier_score_on(Nl,C_s,0.2,workspace1,2,inf);
 
 
+%Characterize GOA pf---------------------------------
+
 N_s = 500;
-Nsim = 100;
+Nsim = 1;
 C_s = [8,20,100,500];
 all_vars = zeros(Nsim,4);
 pferror=zeros(60,4);
@@ -138,44 +138,44 @@ legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
 ylabel('Mean GOA Error');
 title('Mean Original vs. New Error');
-
-
-figure();
-subplot(2,2,1)
-hold on;
-grid on;
-title(sprintf('Cs=%.0f',C_s(1)))
-plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff));
-plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,1)),'--r');
-plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,1)),'--r');
-legend('Error','2\sigma Bound')
-
-subplot(2,2,2)
-hold on;
-grid on;
-title(sprintf('Cs=%.0f',C_s(2)))
-plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff));
-plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,2)),'--r');
-plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,2)),'--r');
-legend('Error','2\sigma Bound')
-
-subplot(2,2,3)
-hold on;
-grid on;
-title(sprintf('Cs=%.0f',C_s(3)))
-plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff));
-plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,3)),'--r');
-plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,3)),'--r');
-legend('Error','2\sigma Bound')
-
-subplot(2,2,4)
-hold on;
-grid on;
-title(sprintf('Cs=%.0f',C_s(4)))
-plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff));
-plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,4)),'--r');
-plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,4)),'--r');
-legend('Error','2\sigma Bound')
+% 
+% 
+% figure();
+% subplot(2,2,1)
+% hold on;
+% grid on;
+% title(sprintf('Cs=%.0f',C_s(1)))
+% plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff));
+% plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,1)),'--r');
+% plot(pferror(1:vars_cutoff,1)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,1)),'--r');
+% legend('Error','2\sigma Bound')
+% 
+% subplot(2,2,2)
+% hold on;
+% grid on;
+% title(sprintf('Cs=%.0f',C_s(2)))
+% plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff));
+% plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,2)),'--r');
+% plot(pferror(1:vars_cutoff,2)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,2)),'--r');
+% legend('Error','2\sigma Bound')
+% 
+% subplot(2,2,3)
+% hold on;
+% grid on;
+% title(sprintf('Cs=%.0f',C_s(3)))
+% plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff));
+% plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,3)),'--r');
+% plot(pferror(1:vars_cutoff,3)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,3)),'--r');
+% legend('Error','2\sigma Bound')
+% 
+% subplot(2,2,4)
+% hold on;
+% grid on;
+% title(sprintf('Cs=%.0f',C_s(4)))
+% plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff));
+% plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff)+2*sqrt(all_vars(1:vars_cutoff,4)),'--r');
+% plot(pferror(1:vars_cutoff,4)./counts(1:vars_cutoff)-2*sqrt(all_vars(1:vars_cutoff,4)),'--r');
+% legend('Error','2\sigma Bound')
 %Option 3: Shorter horizon MC sims
 % figure()
 % subplot(2,1,1)
