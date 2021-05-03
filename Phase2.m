@@ -3,9 +3,9 @@ close all
 clc
 % 
 % tic
-% load('sim_adv')
-% load('sim_curr')
-% load('sim_outc')
+% load('simadv')
+% load('simcurr')
+% load('simoutc')
 % toc
 %% All the fancy algorithms
 
@@ -30,10 +30,10 @@ enemy = [normrnd(5,6,1), normrnd(2,6,1)];
 
 [current, adversary, caught, pzs, oa]=goa_online_no_composite(workspace1,start,goal,enemy,.4,1000,inf);
 
-goal_achieved = ~caught(end)
+goal_achieved = ~caught(end);
 successbin=zeros(1,length(current));
 failurebin=zeros(1,length(current));
-closeness = 0.05;
+closeness = 0.15;
 
 
 %%
@@ -71,21 +71,93 @@ for k=1:length(current)
 end
 
 
-figure
-plot(successbin)
-xlabel('Time step (k)')
-ylabel('Estimated Probability of Success')
-ylim([0 1])
-title('Particle Filter Probability Estimate', 'For the Successful Case')
+% figure
+% plot(successbin)
+% xlabel('Time step (k)')
+% ylabel('Estimated Probability of Success')
+% ylim([0 1])
+% title('Particle Filter Probability Estimate')
+% 
+% figure
+% plot(goaest)
+% hold on
+% plot(oa)
+% 
+% 
+% 
+% figure, plot(current(:,1), current(:,2))
+% hold on
+% plot(adversary(:,1), adversary(:,2))
 
-figure
-plot(goaest)
-hold on
-plot(oa)
+subplot(2,1,1)
+hold on;
+grid on;
+xlabel('k');
+ylabel('GOA');
+title('GOA value comparison');
+
+axis equal;
+title('Bug Problem Playout');
+xlabel('X');
+ylabel('Y');
+scatter(adversary(1:5:end,1),adversary(1:5:end,2),'k');
+scatter(current(1:5:end,1),current(1:5:end,2),'k');
+plot(adversary(1,1),adversary(1,2),'r.','MarkerSize',10)
+plot(goal(1),goal(2),'g.','MarkerSize',10)
+a = plot(current(:,1),current(:,2),'b','LineWidth',5);
+a.Color(4) = 0.3;
+b = plot(adversary(:,1),adversary(:,2),'r','LineWidth',5);
+b.Color(4) = 0.3;
+
+subplot(2,1,2)
+hold on;
+grid on;
+place = 1:5:length(current);
+for i = 1:length(place)
+    xline(place(i),'--');
+end
+a(1) = plot(1:length(oa),oa);
+a(2) = plot(1:length(goaest),goaest(1:end));
+legend(a,{'Original','New'});
+xlabel('k');
+ylabel('GOA');
+
+title('GOA value comparison');
 
 
+%BS Stuff
+N = 200;
 
-figure, plot(current(:,1), current(:,2))
-hold on
-plot(adversary(:,1), adversary(:,2))
+for i = 1:N
+        start = [normrnd(15,.5,1), normrnd(0,.5,1)];
+        goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
+        enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
+        
+        
+        %Get a temporal BS for each step
+        for w = 1:length(goaest)
+          b = zeros(1,w);
+          regret = zeros(1,w);
+          regret2 = zeros(1,w);
+          forecast_prob(w) = successbin(w);
+          result =  runMCSims(workspace1,current(w,:),goal,adversary(w,:),1,0.4,inf);
+          actual_run(w) = result(3);
+        end
+        b = (forecast_prob - actual_run).^2;
+
+        for z = 1:length(actual_run)
+            if actual_run(z) == 1
+                regret(z) = ((1-goaest(z))/2)^2;
+            else
+                regret(z) = ((1 + goaest(z))/2)^2;
+
+            end
+        end
+        bt(i) = mean(b);
+        regrett(i) = mean(regret);
+end
+BS = sum(bt)/N;
+R = sum(regrett)/N;
+
+ 
 

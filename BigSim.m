@@ -24,17 +24,18 @@ for i=1:1e6
     simadv{i}=adversary';
     simoutc(i)=outcome';
     if plotting
-    if outcome==1
-        color='g-';
-    else 
-        color='r-';
-    end
-    figure(1)
-    plot(current(:,2),adversary(:,2),color)
-    hold on
-    xlabel('Current y Position')
-    ylabel('Adversary y Position')
-    title('Simulated Outcomes')
+        if outcome==1
+            color='g-';
+        else 
+            color='r-';
+        end
+    
+        figure(1)
+        plot(current(:,2),adversary(:,2),color)
+        hold on
+        xlabel('Current y Position')
+        ylabel('Adversary y Position')
+        title('Simulated Outcomes')
     end
 end
 
