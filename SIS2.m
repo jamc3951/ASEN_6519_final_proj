@@ -14,6 +14,9 @@ for j = 1:C_s
     adversary_kp(j,:) = a(2,:);
     transitions{j} = tp;
     
+    chist{j}=c;
+    ahist{j}=a;
+    
     char_weights(j)=mvnpdf([current_kp(j,:),adversary_kp(j,:)],ykp,abs([current_kp(j,:),adversary_kp(j,:)]- ykp).*eye(4) + eye(4));
     
    
@@ -42,9 +45,9 @@ for i = 1:(N_s-C_s)
     %P = ([current_kp(c,:),adversary_kp(c,:)] - weighted_mean)'*([current_kp(c,:),adversary_kp(c,:)] - weighted_mean); %-  weighted_mean*weighted_mean';
     
 %     current_c = mvnrnd(current_kp(c,:),.05*eye(2)); 
-    [current_c, tcc]= samplefollower(current,current_kp(c,:), .5, .1);
+    [current_c, tcc]= samplefollower(current,current_kp(c,:), .5, .01);
 %     adversary_c = mvnrnd(adversary_kp(c,:),.05*eye(2));
-    [adversary_c, taa]= samplefollower(adversary, adversary_kp(c,:), .5, .1);
+    [adversary_c, taa]= samplefollower(adversary, adversary_kp(c,:), .5, .01);
     followerc(i,:)=current_c;
     followera(i,:)=adversary_c;
     
@@ -72,12 +75,23 @@ for i = 1:(N_s-C_s)
 %     end
 end
 
-% figure(C_s)
+% figure()
 % hold on 
-% scatter(current(1),current(2),'ob')
+% scatter(current(1),current(2),'ob','LineWidth',1.5)
 % hold on
-% scatter(current_kp(:,1),current_kp(:,2),'bx','LineWidth',1.5)
+% 
+% scatter(followerc(:,1),followerc(:,2),'bx','LineWidth',1)
 % axis square
+% 
+% colcod={'r','g'};
+% for m=1:length(current_kp)
+%     scatter(current_kp(m,1),current_kp(m,2),colcod{outcomes(m)+1},'LineWidth',1.5)
+% end
+% scatter(ykp(1),ykp(2),'sm','LineWidth',1.9)
+% legend('Parent Pt','Followers','Characteristic Pt')
+
+
+
 % scatter(goal(1),goal(2),'g*','LineWidth',1.2)
 % scatter(adversary(1),adversary(2),'or')
 % hold on
