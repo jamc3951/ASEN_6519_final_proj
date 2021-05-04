@@ -17,13 +17,13 @@ for j = 1:C_s
     chist{j}=c;
     ahist{j}=a;
     
-    char_weights(j)=mvnpdf([current_kp(j,:),adversary_kp(j,:)],ykp,abs([current_kp(j,:),adversary_kp(j,:)]- ykp).*eye(4) + eye(4));
+    char_weights(j)=mvnpdf([current_kp(j,:),adversary_kp(j,:)],ykp,abs([current_kp(j,:),adversary_kp(j,:)]- ykp).*eye(4) + eye(4))*transitions{j}(2);
     
    
     if outcomes(j) == 1
-        outcomes_kp(2) = outcomes_kp(2) + char_weights(j)*transitions{j}(2);
+        outcomes_kp(2) = outcomes_kp(2) + char_weights(j);
     else
-        outcomes_kp(1) = outcomes_kp(1) + char_weights(j)*transitions{j}(2);
+        outcomes_kp(1) = outcomes_kp(1) + char_weights(j);
     end
     
 end
@@ -45,9 +45,9 @@ for i = 1:(N_s-C_s)
     %P = ([current_kp(c,:),adversary_kp(c,:)] - weighted_mean)'*([current_kp(c,:),adversary_kp(c,:)] - weighted_mean); %-  weighted_mean*weighted_mean';
     
 %     current_c = mvnrnd(current_kp(c,:),.05*eye(2)); 
-    [current_c, tcc]= samplefollower(current,current_kp(c,:), .5, 1/C_s);
+    [current_c, tcc]= samplefollower(current,current_kp(c,:), .5, 1/C_s^2);
 %     adversary_c = mvnrnd(adversary_kp(c,:),.05*eye(2));
-    [adversary_c, taa]= samplefollower(adversary, adversary_kp(c,:), .5, 1/(C_s^3));
+    [adversary_c, taa]= samplefollower(adversary, adversary_kp(c,:), .5, 1/(C_s^2));
     followerc(i,:)=current_c;
     followera(i,:)=adversary_c;
     
