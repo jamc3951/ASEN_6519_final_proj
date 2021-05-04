@@ -98,7 +98,7 @@ Nl = C_s;
 %Characterize GOA pf---------------------------------
 
 N_s = 500;
-Nsim = 50;
+Nsim = 20;
 C_s = [8,20,100,500];
 all_vars = zeros(Nsim,4);
 pferror=zeros(60,4);
