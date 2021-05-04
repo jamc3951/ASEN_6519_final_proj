@@ -98,7 +98,7 @@ Nl = C_s;
 %Characterize GOA pf---------------------------------
 
 N_s = 500;
-Nsim = 50;
+Nsim = 2;
 C_s = [8,20,100,500];
 all_vars = zeros(Nsim,4);
 pferror=zeros(60,4);
@@ -113,7 +113,7 @@ for k=1:Nsim
     enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
     [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
     all_vars(k,:) = [var(abs(pf_oa(:,1) - oa)) var(abs(pf_oa(:,2) - oa)) var(abs(pf_oa(:,3) - oa)) var(abs(pf_oa(:,4) - oa))];
-    pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
+    pferror(1:length(oa),:)=pferror(1:length(oa),:)+(pf_oa(:,:) - oa);
     counts(1:length(oa))=counts(1:length(oa))+1;
     if k>1
         mssd(1:length(oa),:)=mssd(1:length(oa),:)+(pferror(1:length(oa),:)-prev_error(1:length(oa),:)).^2/2;
