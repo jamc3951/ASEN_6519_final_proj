@@ -98,7 +98,7 @@ Nl = C_s;
 %Characterize GOA pf---------------------------------
 
 N_s = 500;
-Nsim = 30;
+Nsim = 50;
 C_s = [8,20,100,500];
 all_vars = zeros(Nsim,4);
 pferror=zeros(60,4);
@@ -131,7 +131,7 @@ temp_cutoff = max(find(counts == Nsim));
 figure()
 hold on;
 grid on;
-plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
+plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff),'LineWidth',1)
 %errorbar(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff),2*sqrt(all_vars(1:temp_cutoff,:)));
 % plot(mssd./(2*(counts-1)),'--')
 legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');

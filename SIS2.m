@@ -17,13 +17,13 @@ for j = 1:C_s
     chist{j}=c;
     ahist{j}=a;
     
-    char_weights(j)=mvnpdf([current_kp(j,:),adversary_kp(j,:)],ykp,abs([current_kp(j,:),adversary_kp(j,:)]- ykp).*eye(4) + eye(4))*transitions{j}(2);
+    char_weights(j)=mvnpdf([current_kp(j,:),adversary_kp(j,:)],ykp,abs([current_kp(j,:),adversary_kp(j,:)]- ykp).*eye(4) + eye(4));
     
    
     if outcomes(j) == 1
-        outcomes_kp(2) = outcomes_kp(2) + char_weights(j);
+        outcomes_kp(2) = outcomes_kp(2) + char_weights(j)*transitions{j}(2);
     else
-        outcomes_kp(1) = outcomes_kp(1) + char_weights(j);
+        outcomes_kp(1) = outcomes_kp(1) + char_weights(j)*transitions{j}(2);
     end
     
 end
@@ -55,7 +55,7 @@ for i = 1:(N_s-C_s)
     Py=10;
     
 %          weight = p_followertrans*p_meas/(p_transchar*p_sampfollow)   abs([current_c,adversary_c]- ykp).*eye(4) + 
-        weight = 0.4*0.2*(mvnpdf([current_c,adversary_c],ykp,abs([current_c,adversary_c]- ykp).*eye(4) + eye(4)))/transitions{c}(2)/(tcc*taa);
+        weight = 0.4*0.2*(mvnpdf([current_c,adversary_c],ykp,abs([current_c,adversary_c]- ykp).*eye(4) + eye(4)))/transitions{c}(2)/(tcc*taa*char_weights(c));
 %         weight = transitions{c}(2)*(mvnpdf([current_c,adversary_c],ykp,.25*eye(4)));
     if outcomes(c) == 1 %Variance?
         outcomes_kp(2) = outcomes_kp(2) + weight;
