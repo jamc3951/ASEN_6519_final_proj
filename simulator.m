@@ -59,7 +59,7 @@ title('GOA value comparison');
 % plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
 % 
 % legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
-
+figure(1)
 axis equal;
 title('Bug Problem Playout');
 xlabel('X');
