@@ -8,6 +8,7 @@ function [collide,current,adversary] = env_step(workspace,goal,current,adversary
     if chance <= error
         %move in a random direction
         direction = 2*rand(1,2) - 1;
+        direction=direction/norm(direction);
     end
     
     current = [current; current(end,:) + direction*step];
@@ -21,6 +22,7 @@ function [collide,current,adversary] = env_step(workspace,goal,current,adversary
     if chance <= error/2
         %move in a random direction
         direction = 2*rand(1,2) - 1;
+        direction=direction/norm(direction);
     end
     adversary = [adversary; adversary(end,:) + positive.*direction*step];
     
