@@ -98,7 +98,7 @@ Nl = C_s;
 %Characterize GOA pf---------------------------------
 
 N_s = 500;
-Nsim = 20;
+Nsim = 30;
 C_s = [8,20,100,500];
 all_vars = zeros(Nsim,4);
 pferror=zeros(60,4);
@@ -138,6 +138,18 @@ legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
 ylabel('Mean GOA Error');
 title('Mean Original vs. New Error');
+
+figure()
+hold on
+grid on
+plot(pf_oa,'x--','LineWidth',1)
+hold on 
+plot(oa,'k','LineWidth',1.3)
+title('Single Run Comparison to GOA')
+xlabel('k');
+ylabel('GOA');
+legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500','Location','Best');
+
 % 
 % 
 % figure();
