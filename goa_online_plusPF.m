@@ -8,7 +8,10 @@ pzs = [];
 step = 0.5;
 caught = [];
 d_0 = distance(start,goal);
-w_kold = [.5 .5];
+
+traj = runMCSims(workspace,start,goal,enemy,2000,error,inf);
+[goal_confidence,z,z_ll,p_z] = general_oa_v2(traj(:,3), [-0.5,0.5,1], 2);
+w_kold = p_z;
 
 
 
