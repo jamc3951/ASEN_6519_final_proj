@@ -20,7 +20,7 @@ workspace1(:,:,2) = O2;
 workspace1(:,:,3) = O3;
 workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
-Nsim = 30;
+Nsim = 1;
 count = zeros(1,60);
 
 
