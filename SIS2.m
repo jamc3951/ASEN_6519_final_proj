@@ -45,9 +45,9 @@ for i = 1:(N_s-C_s)
     %P = ([current_kp(c,:),adversary_kp(c,:)] - weighted_mean)'*([current_kp(c,:),adversary_kp(c,:)] - weighted_mean); %-  weighted_mean*weighted_mean';
     
 %     current_c = mvnrnd(current_kp(c,:),.05*eye(2)); 
-    [current_c, tcc]= samplefollower(current,current_kp(c,:), .5, .01);
+    [current_c, tcc]= samplefollower(current,current_kp(c,:), .5, 1/C_s^2);
 %     adversary_c = mvnrnd(adversary_kp(c,:),.05*eye(2));
-    [adversary_c, taa]= samplefollower(adversary, adversary_kp(c,:), .5, .01);
+    [adversary_c, taa]= samplefollower(adversary, adversary_kp(c,:), .5, 1/(C_s^2));
     followerc(i,:)=current_c;
     followera(i,:)=adversary_c;
     
@@ -55,7 +55,7 @@ for i = 1:(N_s-C_s)
     Py=10;
     
 %          weight = p_followertrans*p_meas/(p_transchar*p_sampfollow)   abs([current_c,adversary_c]- ykp).*eye(4) + 
-        weight = 0.4*0.2*(mvnpdf([current_c,adversary_c],ykp,abs([current_c,adversary_c]- ykp).*eye(4) + eye(4)))/transitions{c}(2)/(tcc*taa);
+        weight = 0.4*0.2*(mvnpdf([(current_c-ykp(1:2))/norm((current_c-ykp(1:2))),(adversary_c-ykp(3:end))/norm((adversary_c-ykp(3:end)))],[0 0 0 0],1/C_s*eye(4)))/transitions{c}(2)/(tcc*taa);
 %         weight = transitions{c}(2)*(mvnpdf([current_c,adversary_c],ykp,.25*eye(4)));
     if outcomes(c) == 1 %Variance?
         outcomes_kp(2) = outcomes_kp(2) + weight;
@@ -74,22 +74,23 @@ for i = 1:(N_s-C_s)
 % 
 %     end
 end
-
+% 
 % figure()
 % hold on 
-% scatter(current(1),current(2),'ob','LineWidth',1.5)
+% scatter(current(1),current(2),'ok','LineWidth',1.5)
 % hold on
-% 
-% scatter(followerc(:,1),followerc(:,2),'bx','LineWidth',1)
-% axis square
+% scatter(ykp(1),ykp(2),'sm','LineWidth',1.9)
+% scatter(followerc(:,1),followerc(:,2),'cx','LineWidth',.8)
 % 
 % colcod={'r','g'};
 % for m=1:length(current_kp)
 %     scatter(current_kp(m,1),current_kp(m,2),colcod{outcomes(m)+1},'LineWidth',1.5)
 % end
-% scatter(ykp(1),ykp(2),'sm','LineWidth',1.9)
-% legend('Parent Pt','Followers','Characteristic Pt')
-
+% 
+% legend('Parent Point','Measurement','Followers','Characteristic Points')
+% title('Sampling Distribution')
+% xlabel('x')
+% ylabel('y')
 
 
 % scatter(goal(1),goal(2),'g*','LineWidth',1.2)

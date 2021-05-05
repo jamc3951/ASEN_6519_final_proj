@@ -23,10 +23,11 @@ workspace1(:,:,5) = O5;
 Nsim = 30;
 count = zeros(1,60);
 
+<<<<<<< HEAD
 
-
+=======
 for sim = 1:Nsim
-
+>>>>>>> 659746740775d3618add32d1ce2863b04c39b3bb
 start = [normrnd(15,.5,1), normrnd(0,.5,1)];
 goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
 enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
@@ -40,7 +41,42 @@ successbin=zeros(1,length(current));
 failurebin=zeros(1,length(current));
 closeness = 0.1;
 
+<<<<<<< HEAD
 
+%%
+% w_consid=length(simcurr); % Start with considering whole dataset
+% weight=ones(w_consid,1)./(w_consid);
+% for k=1:length(current)
+%     tic
+%     for j=1:w_consid
+%         if length(simcurr{j})>= k
+%             weight(j)=mvnpdf([(simcurr{j}(:,k))', (simadv{j}(:,k))'], [current(k,:), adversary(k,:)], 10*eye(4));
+%         else
+%             weight(j)=0;
+%         end
+%     end
+%     toc
+%     
+%     weight=weight./sum(weight);
+%     
+%     
+%     
+%     [sort_weight,idx_weight]=sort(weight,'descend');
+%     keepidx=find(sort_weight>=max(sort_weight)*closeness);
+%     
+%     weight=sort_weight;
+%     w_consid=length(keepidx);
+%     simcurr=simcurr(idx_weight);
+%     simadv=simadv(idx_weight);
+%     simoutc=simoutc(idx_weight);
+%     successbin(k)=simoutc*weight;
+%     failurebin(k)=1-successbin(k);
+%     
+%     [goal_confidence,z,z_ll,p_z] = general_oa_v2(datasample([0,1],500,'Weights',[failurebin(k) successbin(k)]), [-0.5,0.5,1], 2);
+%     goaest(k)= goal_confidence;
+%     
+% end
+=======
 goaest=[];
 w_consid=length(simcurr); % Start with considering whole dataset
 weight=ones(w_consid,1)./(w_consid);
@@ -85,7 +121,9 @@ for k=1:length(current)-1
     [goal_confidence,z,z_ll,p_z] = general_oa_v2(datasample([0,1],500,'Weights',[failurebin(k) successbin(k)]), [-0.5,0.5,1], 2);
     goaest(k)= goal_confidence;
  
+    
 end
+>>>>>>> 659746740775d3618add32d1ce2863b04c39b3bb
 
 error_p2(1:length(goaest))=abs(goaest-oa(1:length(goaest))');
 count(1:length(goaest))=count(1:length(goaest))+1;

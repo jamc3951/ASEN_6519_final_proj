@@ -128,16 +128,29 @@ Nl = C_s;
 % temp_cutoff = max(find(counts == Nsim));
 
 
-% figure()
-% hold on;
-% grid on;
-% plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
-% %errorbar(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff),2*sqrt(all_vars(1:temp_cutoff,:)));
-% % plot(mssd./(2*(counts-1)),'--')
-% legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
-% xlabel('k');
-% ylabel('Mean GOA Error');
-% title('Mean Original vs. New Error');
+
+figure()
+hold on;
+grid on;
+plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff),'LineWidth',1)
+%errorbar(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff),2*sqrt(all_vars(1:temp_cutoff,:)));
+% plot(mssd./(2*(counts-1)),'--')
+legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
+xlabel('k');
+ylabel('Mean GOA Error');
+title('Mean Original vs. New Error');
+
+figure()
+hold on
+grid on
+plot(pf_oa,'x--','LineWidth',1)
+hold on 
+plot(oa,'k','LineWidth',1.3)
+title('Single Run Comparison to GOA')
+xlabel('k');
+ylabel('GOA');
+legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500','Location','Best');
+
 % 
 % 
 % figure();
