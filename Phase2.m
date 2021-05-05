@@ -20,11 +20,13 @@ workspace1(:,:,2) = O2;
 workspace1(:,:,3) = O3;
 workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
+Nsim = 30;
+count = zeros(1,60);
 
-
-start = [normrnd(15,1,1), normrnd(0,1,1)];
-goal = [normrnd(10,1,1), normrnd(10,1,1)];
-enemy = [normrnd(5,6,1), normrnd(2,6,1)];
+for sim = 1:Nsim
+start = [normrnd(15,.5,1), normrnd(0,.5,1)];
+goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
+enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
 
 % [current, adversary, goal_achieved] = bug1(workspace1,start,goal,enemy,.4,inf);
 
@@ -35,22 +37,33 @@ successbin=zeros(1,length(current));
 failurebin=zeros(1,length(current));
 closeness = 0.15;
 
-
-%%
+goaest=[];
 w_consid=length(simcurr); % Start with considering whole dataset
 weight=ones(w_consid,1)./(w_consid);
-for k=1:length(current)
-    tic
+for k=1:length(current)-1
+
     for j=1:w_consid
         if length(simcurr{j})>= k
-            weight(j)=mvnpdf([(simcurr{j}(:,k))', (simadv{j}(:,k))'], [current(k,:), adversary(k,:)], 10*eye(4));
+            weight(j)=mvnpdf([(simcurr{j}(:,k))', (simadv{j}(:,k))'], [current(k,:), adversary(k,:)], 1*eye(4));
+            if simoutc(j)==1
+                successbin(k)=successbin(k)+weight(j);
+            else
+                failurebin(k)=failurebin(k)+weight(j);
+            end
         else
             weight(j)=0;
         end
     end
-    toc
+
     
     weight=weight./sum(weight);
+    sbt= successbin(k)+failurebin(k);
+    if sbt == 0
+        sim = sim-1;
+        break
+    end
+    successbin(k) = successbin(k)/sbt;
+    failurebin(k) = failurebin(k)/sbt;
     
     
     
@@ -62,38 +75,58 @@ for k=1:length(current)
     simcurr=simcurr(idx_weight);
     simadv=simadv(idx_weight);
     simoutc=simoutc(idx_weight);
-    successbin(k)=simoutc*weight;
-    failurebin(k)=1-successbin(k);
+%     successbin(k)=simoutc(1:w_consid)*weight(1:w_consid); %/(sum(simoutc)/length(simoutc))
+%     failurebin(k)=1-successbin(k);
     
     [goal_confidence,z,z_ll,p_z] = general_oa_v2(datasample([0,1],500,'Weights',[failurebin(k) successbin(k)]), [-0.5,0.5,1], 2);
     goaest(k)= goal_confidence;
+ 
     
 end
 
+error_p2(1:length(goaest))=abs(goaest-oa(1:length(goaest))');
+count(1:length(goaest))=count(1:length(goaest))+1;
 
-% figure
-% plot(successbin)
-% xlabel('Time step (k)')
-% ylabel('Estimated Probability of Success')
-% ylim([0 1])
-% title('Particle Filter Probability Estimate')
-% 
-% figure
-% plot(goaest)
-% hold on
-% plot(oa)
+end
+
+
+temp_cutoff = max(find(count == Nsim))-1;
+
+
+figure()
+hold on;
+grid on;
+plot(error_p2(1:temp_cutoff)./count(1:temp_cutoff),'LineWidth',1)
+xlabel('k');
+ylabel('Mean GOA Error');
+title('Mean Original vs. Phase 2 Estimate Error');
+
+figure
+plot(successbin)
+xlabel('Time step (k)')
+ylabel('Estimated Probability of Success')
+ylim([0 1])
+title('Particle Filter Probability Estimate')
+
+figure
+plot(goaest)
+hold on
+plot(oa)
+ylim([-1 1])
+
 % 
 % 
 % 
 % figure, plot(current(:,1), current(:,2))
 % hold on
 % plot(adversary(:,1), adversary(:,2))
-
+figure
 subplot(2,1,1)
 hold on;
 grid on;
 xlabel('k');
 ylabel('GOA');
+
 title('GOA value comparison');
 
 axis equal;
@@ -118,6 +151,7 @@ for i = 1:length(place)
 end
 a(1) = plot(1:length(oa),oa);
 a(2) = plot(1:length(goaest),goaest(1:end));
+ylim([-1 1])
 legend(a,{'Original','New'});
 xlabel('k');
 ylabel('GOA');
