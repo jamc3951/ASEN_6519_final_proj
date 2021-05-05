@@ -55,8 +55,8 @@ for i = 1:(N_s-C_s)
     Py=10;
     
 %          weight = p_followertrans*p_meas/(p_transchar*p_sampfollow)   abs([current_c,adversary_c]- ykp).*eye(4) + 
-        weight = 0.4*0.2*(mvnpdf([(current_c-ykp(1:2))/norm((current_c-ykp(1:2))),(adversary_c-ykp(3:end))/norm((adversary_c-ykp(3:end)))],[0 0 0 0],1/C_s*eye(4)))/transitions{c}(2)/(tcc*taa);
-%         weight = transitions{c}(2)*(mvnpdf([current_c,adversary_c],ykp,.25*eye(4)));
+%         weight = 0.4*0.2*(mvnpdf([(current_c-ykp(1:2))/norm((current_c-ykp(1:2))),(adversary_c-ykp(3:end))/norm((adversary_c-ykp(3:end)))],[0 0 0 0],1/C_s*eye(4)))/transitions{c}(2)/(tcc*taa);
+        weight = 0.4*0.2*(mvnpdf([current_c,adversary_c],ykp,abs([current_c,adversary_c]- ykp).*eye(4) + eye(4)))/transitions{c}(2)/(tcc*taa);
     if outcomes(c) == 1 %Variance?
         outcomes_kp(2) = outcomes_kp(2) + weight;
     else
