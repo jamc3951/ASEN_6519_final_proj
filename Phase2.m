@@ -3,9 +3,9 @@ close all
 clc
 % 
 % tic
-% load('simadv')
-% load('simcurr')
-% load('simoutc')
+ load('simadv')
+ load('simcurr')
+ load('simoutc')
 % toc
 %% All the fancy algorithms
 
@@ -22,9 +22,9 @@ workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
 
 
-start = [normrnd(15,1,1), normrnd(0,1,1)];
-goal = [normrnd(10,1,1), normrnd(10,1,1)];
-enemy = [normrnd(5,6,1), normrnd(2,6,1)];
+start = [normrnd(15,.5,1), normrnd(0,.5,1)];
+goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
+enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
 
 % [current, adversary, goal_achieved] = bug1(workspace1,start,goal,enemy,.4,inf);
 
@@ -33,42 +33,42 @@ enemy = [normrnd(5,6,1), normrnd(2,6,1)];
 goal_achieved = ~caught(end);
 successbin=zeros(1,length(current));
 failurebin=zeros(1,length(current));
-closeness = 0.15;
+closeness = 0.1;
 
 
 %%
-w_consid=length(simcurr); % Start with considering whole dataset
-weight=ones(w_consid,1)./(w_consid);
-for k=1:length(current)
-    tic
-    for j=1:w_consid
-        if length(simcurr{j})>= k
-            weight(j)=mvnpdf([(simcurr{j}(:,k))', (simadv{j}(:,k))'], [current(k,:), adversary(k,:)], 10*eye(4));
-        else
-            weight(j)=0;
-        end
-    end
-    toc
-    
-    weight=weight./sum(weight);
-    
-    
-    
-    [sort_weight,idx_weight]=sort(weight,'descend');
-    keepidx=find(sort_weight>=max(sort_weight)*closeness);
-    
-    weight=sort_weight;
-    w_consid=length(keepidx);
-    simcurr=simcurr(idx_weight);
-    simadv=simadv(idx_weight);
-    simoutc=simoutc(idx_weight);
-    successbin(k)=simoutc*weight;
-    failurebin(k)=1-successbin(k);
-    
-    [goal_confidence,z,z_ll,p_z] = general_oa_v2(datasample([0,1],500,'Weights',[failurebin(k) successbin(k)]), [-0.5,0.5,1], 2);
-    goaest(k)= goal_confidence;
-    
-end
+% w_consid=length(simcurr); % Start with considering whole dataset
+% weight=ones(w_consid,1)./(w_consid);
+% for k=1:length(current)
+%     tic
+%     for j=1:w_consid
+%         if length(simcurr{j})>= k
+%             weight(j)=mvnpdf([(simcurr{j}(:,k))', (simadv{j}(:,k))'], [current(k,:), adversary(k,:)], 10*eye(4));
+%         else
+%             weight(j)=0;
+%         end
+%     end
+%     toc
+%     
+%     weight=weight./sum(weight);
+%     
+%     
+%     
+%     [sort_weight,idx_weight]=sort(weight,'descend');
+%     keepidx=find(sort_weight>=max(sort_weight)*closeness);
+%     
+%     weight=sort_weight;
+%     w_consid=length(keepidx);
+%     simcurr=simcurr(idx_weight);
+%     simadv=simadv(idx_weight);
+%     simoutc=simoutc(idx_weight);
+%     successbin(k)=simoutc*weight;
+%     failurebin(k)=1-successbin(k);
+%     
+%     [goal_confidence,z,z_ll,p_z] = general_oa_v2(datasample([0,1],500,'Weights',[failurebin(k) successbin(k)]), [-0.5,0.5,1], 2);
+%     goaest(k)= goal_confidence;
+%     
+% end
 
 
 % figure
@@ -89,51 +89,50 @@ end
 % hold on
 % plot(adversary(:,1), adversary(:,2))
 
-subplot(2,1,1)
-hold on;
-grid on;
-xlabel('k');
-ylabel('GOA');
-title('GOA value comparison');
-
-axis equal;
-title('Bug Problem Playout');
-xlabel('X');
-ylabel('Y');
-scatter(adversary(1:5:end,1),adversary(1:5:end,2),'k');
-scatter(current(1:5:end,1),current(1:5:end,2),'k');
-plot(adversary(1,1),adversary(1,2),'r.','MarkerSize',10)
-plot(goal(1),goal(2),'g.','MarkerSize',10)
-a = plot(current(:,1),current(:,2),'b','LineWidth',5);
-a.Color(4) = 0.3;
-b = plot(adversary(:,1),adversary(:,2),'r','LineWidth',5);
-b.Color(4) = 0.3;
-
-subplot(2,1,2)
-hold on;
-grid on;
-place = 1:5:length(current);
-for i = 1:length(place)
-    xline(place(i),'--');
-end
-a(1) = plot(1:length(oa),oa);
-a(2) = plot(1:length(goaest),goaest(1:end));
-legend(a,{'Original','New'});
-xlabel('k');
-ylabel('GOA');
-
-title('GOA value comparison');
+% subplot(2,1,1)
+% hold on;
+% grid on;
+% xlabel('k');
+% ylabel('GOA');
+% title('GOA value comparison');
+% 
+% axis equal;
+% title('Bug Problem Playout');
+% xlabel('X');
+% ylabel('Y');
+% scatter(adversary(1:5:end,1),adversary(1:5:end,2),'k');
+% scatter(current(1:5:end,1),current(1:5:end,2),'k');
+% plot(adversary(1,1),adversary(1,2),'r.','MarkerSize',10)
+% plot(goal(1),goal(2),'g.','MarkerSize',10)
+% a = plot(current(:,1),current(:,2),'b','LineWidth',5);
+% a.Color(4) = 0.3;
+% b = plot(adversary(:,1),adversary(:,2),'r','LineWidth',5);
+% b.Color(4) = 0.3;
+% 
+% subplot(2,1,2)
+% hold on;
+% grid on;
+% place = 1:5:length(current);
+% for i = 1:length(place)
+%     xline(place(i),'--');
+% end
+% a(1) = plot(1:length(oa),oa);
+% a(2) = plot(1:length(goaest),goaest(1:end));
+% legend(a,{'Original','New'});
+% xlabel('k');
+% ylabel('GOA');
+% 
+% title('GOA value comparison');
 
 
 %BS Stuff
-N = 200;
-
+N = 50;
+c = 0.1;
 for i = 1:N
-        start = [normrnd(15,.5,1), normrnd(0,.5,1)];
-        goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
-        enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
-        
-        
+        i
+       [goaest,successbin,current,adversary,goal] = phase2_but_a_function(simcurr, simadv, simoutc, c);
+        forecast_prob = zeros(1,length(goaest));
+        actual_run = zeros(1,length(goaest));
         %Get a temporal BS for each step
         for w = 1:length(goaest)
           b = zeros(1,w);

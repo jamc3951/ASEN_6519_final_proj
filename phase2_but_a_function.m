@@ -1,4 +1,4 @@
-function [goaest,successbin] = phase2_but_a_function(simcurr, simadv, simoutc, c)
+function [goaest,successbin,current,adversary,goal] = phase2_but_a_function(simcurr, simadv, simoutc, c)
 
 workspace1 = zeros(4,2,5);
 O1 = [1 1; 2 1; 2 5; 1 5];
@@ -12,10 +12,9 @@ workspace1(:,:,3) = O3;
 workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
 
-
-start = [normrnd(15,1,1), normrnd(0,1,1)];
-goal = [normrnd(10,1,1), normrnd(10,1,1)];
-enemy = [normrnd(5,6,1), normrnd(2,6,1)];
+start = [normrnd(15,.5,1), normrnd(0,.5,1)];
+goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
+enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
 
 % [current, adversary, goal_achieved] = bug1(workspace1,start,goal,enemy,.4,inf);
 
@@ -40,7 +39,6 @@ for k=1:length(current)
         end
     end
     
-    w_consid
     weight=weight./sum(weight);
     
     

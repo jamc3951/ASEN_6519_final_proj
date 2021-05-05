@@ -90,54 +90,54 @@ title('GOA value comparison');
 
 
 %DO BS/RS----------------------------------------
-C_s = [1:50:500];
+C_s = [1:20:500];
 Nl = C_s;
-%[BS,R,R_pf] = brier_score_on(Nl,C_s,0.2,workspace1,2,inf);
+[BS,R,R_pf] = brier_score_on(Nl,C_s,0.4,workspace1,2,inf);
 
 
 %Characterize GOA pf---------------------------------
 
-N_s = 500;
-Nsim = 20;
-C_s = [8,20,100,500];
-all_vars = zeros(Nsim,4);
-pferror=zeros(60,4);
-counts=zeros(60,1);
-mssd=zeros(60,4);
+% N_s = 500;
+% Nsim = 1;
+% C_s = [8,20,100,500];
+% all_vars = zeros(Nsim,4);
+% pferror=zeros(60,4);
+% counts=zeros(60,1);
+% mssd=zeros(60,4);
+% 
+% prev_error=pferror;
+% %f = waitbar(0,'Running Simulations');
+% for k=1:Nsim
+%     start = [normrnd(15,.5,1), normrnd(0,.5,1)];
+%     goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
+%     enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
+%     [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
+%     all_vars(k,:) = [var(abs(pf_oa(:,1) - oa)) var(abs(pf_oa(:,2) - oa)) var(abs(pf_oa(:,3) - oa)) var(abs(pf_oa(:,4) - oa))];
+%     pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
+%     counts(1:length(oa))=counts(1:length(oa))+1;
+%     if k>1
+%         mssd(1:length(oa),:)=mssd(1:length(oa),:)+(pferror(1:length(oa),:)-prev_error(1:length(oa),:)).^2/2;
+%     end
+%     prev_error(1:length(oa),:)=abs(pf_oa(:,:) - oa);
+%     % for i = 1:length(C_s)
+%     %     plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
+%     % end
+%     %waitbar(k/Nsim,f)
+% end
+% 
+% temp_cutoff = max(find(counts == Nsim));
 
-prev_error=pferror;
-%f = waitbar(0,'Running Simulations');
-for k=1:Nsim
-    start = [normrnd(15,.5,1), normrnd(0,.5,1)];
-    goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
-    enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
-    [current, adversary, caught, pzs, oa, pf_oa] = goa_online_plusPF(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
-    all_vars(k,:) = [var(abs(pf_oa(:,1) - oa)) var(abs(pf_oa(:,2) - oa)) var(abs(pf_oa(:,3) - oa)) var(abs(pf_oa(:,4) - oa))];
-    pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
-    counts(1:length(oa))=counts(1:length(oa))+1;
-    if k>1
-        mssd(1:length(oa),:)=mssd(1:length(oa),:)+(pferror(1:length(oa),:)-prev_error(1:length(oa),:)).^2/2;
-    end
-    prev_error(1:length(oa),:)=abs(pf_oa(:,:) - oa);
-    % for i = 1:length(C_s)
-    %     plot(1:length(oa),abs(pf_oa(:,i) - oa),'LineWidth',1.1);
-    % end
-    %waitbar(k/Nsim,f)
-end
 
-temp_cutoff = max(find(counts == Nsim));
-
-
-figure()
-hold on;
-grid on;
-plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
-%errorbar(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff),2*sqrt(all_vars(1:temp_cutoff,:)));
-% plot(mssd./(2*(counts-1)),'--')
-legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
-xlabel('k');
-ylabel('Mean GOA Error');
-title('Mean Original vs. New Error');
+% figure()
+% hold on;
+% grid on;
+% plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
+% %errorbar(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff),2*sqrt(all_vars(1:temp_cutoff,:)));
+% % plot(mssd./(2*(counts-1)),'--')
+% legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
+% xlabel('k');
+% ylabel('Mean GOA Error');
+% title('Mean Original vs. New Error');
 % 
 % 
 % figure();

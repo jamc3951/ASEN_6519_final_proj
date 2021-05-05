@@ -4,7 +4,9 @@ BS = [];
 R = [];
 R_pf = [];
 for j = 1:length(Nl)
+    j
     for i = 1:N
+        
         start = [normrnd(15,.5,1), normrnd(0,.5,1)];
         goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
         enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
@@ -49,10 +51,10 @@ hold on;
 plot(Nl,BS);
 plot(Nl,R);
 plot(Nl,R_pf);
-ylabel('BS');
+ylabel('BS/RS');
 xlabel('Number of samples');
 legend('BS Original','RS Original','Rs New')
-title('Online BS w/ arb. configs');
+title('Online BS/RS Assessment');
 
 
 end

@@ -1,10 +1,10 @@
-function [states11,estates,timeToCatch] = runMCSims3(workspace,start,goal,enemy,n,error,k)
+function [states11,estates,tp,timeToCatch] = runMCSims3(workspace,start,goal,enemy,n,error,k)
 
 plotting = 0;
 timeToCatch = [];
 %hold on;
 for i = 1:n
-    [states11,estates,caught] = bug1(workspace,start,goal,enemy,error,k);
+    [states11,estates,caught,tp] = bug_tp(workspace,start,goal,enemy,error,k);
     timeToCatch = [timeToCatch; [length(states11) distance(states11(end,:),goal) caught]];
     
     if plotting ==1

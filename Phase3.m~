@@ -73,7 +73,7 @@ for k=1:Nsim
     start = [normrnd(15,.5,1), normrnd(0,.5,1)];
     goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
     enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
-    [current, adversary, caught, pzs, oa, pf_oa] = goa_online_pf3(workspace1,start,goal,enemy,0.4,N_s,C_s,inf,4);
+    [current, adversary, caught, pzs, oa, pf_oa] = goa_online_pf3(workspace1,start,goal,enemy,0.4,N_s,C_s,inf);
     all_vars(k,:) = [var(abs(pf_oa(:,1) - oa)) var(abs(pf_oa(:,2) - oa)) var(abs(pf_oa(:,3) - oa)) var(abs(pf_oa(:,4) - oa))];
     pferror(1:length(oa),:)=pferror(1:length(oa),:)+abs(pf_oa(:,:) - oa);
     counts(1:length(oa))=counts(1:length(oa))+1;
@@ -99,18 +99,9 @@ plot(pferror(1:temp_cutoff,:)./counts(1:temp_cutoff))
 legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500');
 xlabel('k');
 ylabel('Mean GOA Error');
-title('Mean Original vs. New Error, z(4)');
+title('Mean Original vs. New Error');
 
 
-figure()
-hold on
-grid on
-plot(pf_oa,'x--','LineWidth',1)
-hold on 
-plot(oa,'k','LineWidth',1.3)
-title('Single Run Comparison to GOA, z(4)')
-xlabel('k');
-ylabel('GOA');
-legend('Cs = 8','Cs = 20','Cs = 100','Cs = 500','Location','Best');
+
 
 
