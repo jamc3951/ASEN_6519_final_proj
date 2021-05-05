@@ -20,7 +20,7 @@ workspace1(:,:,2) = O2;
 workspace1(:,:,3) = O3;
 workspace1(:,:,4) = O4;
 workspace1(:,:,5) = O5;
-Nsim = 5;
+Nsim = 30;
 count = zeros(1,60);
 
 
@@ -31,11 +31,14 @@ start = [normrnd(15,.5,1), normrnd(0,.5,1)];
 goal = [normrnd(10,.5,1), normrnd(10,.5,1)];
 enemy = [normrnd(5,.5,1), normrnd(2,.5,1)];
 
-% [current, adversary, goal_achieved] = bug1(workspace1,start,goal,enemy,.4,inf);
+d_0 = norm(start-goal);
 
-[current, adversary, caught, pzs, oa]=goa_online_no_composite(workspace1,start,goal,enemy,.4,1000,inf);
+[current, adversary, goal_achieved] = bug1(workspace1,start,goal,enemy,.4,inf);
 
-goal_achieved = ~caught(end);
+% [current, adversary, caught, pzs, oa]=goa_online_no_composite(workspace1,start,goal,enemy,.4,1000,inf);
+
+
+
 outcomebin=zeros(4,length(current));
 closeness = 0.05;
 
@@ -43,8 +46,16 @@ closeness = 0.05;
 goaest=[];
 w_consid=length(simcurrp3); % Start with considering whole dataset
 weight=ones(w_consid,1)./(w_consid);
+oa=[];
 for k=1:length(current)-1
 
+    traj = runMCSims(workspace1,current(k,:),goal,adversary(k,:),2000,.4,inf);
+    [outcomes,bins,xBins] = composite_ordering(traj,d_0);
+    [goa,~,p_z] = goa_v3(outcomes,4,bins,xBins,4);
+    oa(k)=goa;
+
+
+    
     for j=1:w_consid
         if length(simcurrp3{j})>= k
             weight(j)=mvnpdf([(simcurrp3{j}(:,k))', (simadvp3{j}(:,k))'], [current(k,:), adversary(k,:)], 1*eye(4));
@@ -78,12 +89,12 @@ for k=1:length(current)-1
 %     successbin(k)=simoutcp3(1:w_consid)*weight(1:w_consid); %/(sum(simoutcp3)/length(simoutcp3))
 %     failurebin(k)=1-successbin(k);
     
-    [goal_confidence,z,z_ll,p_z] = general_oa_v2(datasample(0:3,500,'Weights',outcomebin(:,k)'), [-0.5,0.5,1.5,2.5,3.5], 3);
+    [goal_confidence,z,z_ll,p_z] = general_oa_v2(datasample(0:3,500,'Weights',outcomebin(:,k)'), [-0.5,0.5,1.5,2.5,3.5], 4);
     goaest(k)= goal_confidence;
  
 end
 
-error_p2(1:length(goaest))=abs(goaest-oa(1:length(goaest))');
+error_p2(1:length(goaest))=abs(goaest-oa(1:length(goaest)));
 count(1:length(goaest))=count(1:length(goaest))+1;
 
 end
@@ -168,7 +179,7 @@ for i = 1:N
           b = zeros(1,w);
           regret = zeros(1,w);
           regret2 = zeros(1,w);
-          forecast_prob(w) = successbin(w);
+          forecast_prob(w) = outcomebin(:,w);
           result =  runMCSims(workspace1,current(w,:),goal,adversary(w,:),1,0.4,inf);
           actual_run(w) = result(3);
         end
